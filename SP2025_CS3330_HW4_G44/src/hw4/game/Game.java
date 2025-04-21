@@ -10,28 +10,63 @@ import hw4.maze.Row;
 import hw4.player.Movement;
 import hw4.player.Player;
 
+/**
+ * Game class, contains methods and fields relating to playing the game
+ */
 public class Game {
 	private Grid grid;
 	private int size;
 
+	/**
+	 * Sets the grid to be the passed grid and the size to be the size of the grid
+	 * If the grid is null, the size is set to 0
+	 * @param grid
+	 */
 	public void setGrid(Grid grid) {
 		this.grid = grid;
-		this.size = grid.getRows().size();
+		if (grid == null) {
+			this.size = 0;
+		} else {
+			this.size = grid.getRows().size();
+		}
 	}
 
+	/**
+	 * Grid parameterized constructor for Game,
+	 * Creates game and sets grid to be passed grid, size to be 0 if grid is null or the size of the grid if not
+	 * @param grid
+	 */
 	public Game(Grid grid) {
 		this.grid = grid;
-		this.size = grid.getRows().size();
+		if (grid == null) {
+			this.size = 0;
+		} else {
+			this.size = grid.getRows().size();
+		}
 	}
 
+	/**
+	 * size parameterized constructor for Game
+	 * sets size to be passed value
+	 * @param size
+	 */
 	public Game(int size) {
 		this.size = size;
 	}
 
+	/**
+	 * Returns the grid stored in the Game
+	 * @return
+	 */
 	public Grid getGrid() {
 		return grid;
 	}
 
+	/**
+	 * Creates a random grid based on the length provided and sets the Game's grid to be the newly created grid
+	 * @param length length of grid (width and height)
+	 * @return random Grid created or null if out of bounds
+	 */
 	public Grid createRandomGrid(int length) {
 		if ((length < 3) || (length > 7)) {
 			return null;
@@ -169,10 +204,16 @@ public class Game {
 			Row newRow = new Row(cells);
 			rows.add(newRow);
 		}
-		
-		return new Grid(rows);
+		this.grid = new Grid(rows);
+		return this.grid;
 	}
 	
+	/**
+	 * Returns a boolean for if the exit should be generated
+	 * Chance of boolean being true = 1/length making the chance of the exit generating on each space even
+	 * @param length length of grid
+	 * @return true if exit should be generated or false otherwise
+	 */
 	private boolean generateExit(int length) {
 		Random random = new Random();
 		int randomNumber = random.nextInt(length);
@@ -183,6 +224,10 @@ public class Game {
 		}
 	}
 	
+	/**
+	 * Returns a random cell component (WALL/APERTURE) to be used for random generation
+	 * @return WALL or APERTURE
+	 */
 	private CellComponents randomComponent() {
 		Random random = new Random();
 		int randomNumber = random.nextInt(2);
@@ -193,7 +238,15 @@ public class Game {
 		}
 	}
 
+	/**
+	 * Moves the player in the direction given if the direction leads to an aperture or exit
+	 * Updates player currentRow and currentCell, sets these to null if player exits
+	 * @param direction direction for player to move
+	 * @param player player to move
+	 * @return true if player is moved, false otherwise
+	 */
 	public boolean play(Movement direction, Player player) {
+		//If direction, player, or player's currentCell is null, player cannot be moved
 		if ((direction == null) || (player == null) || (player.getCurrentCell() == null)) {
 			return false;
 		}
@@ -210,6 +263,7 @@ public class Game {
 				movePlayer(Movement.LEFT, player);
 				return true;
 			} else if (currentCell.getLeft() == CellComponents.EXIT) {
+				//Player can exit, should now be off board, AKA null location
 				player.setCurrentCell(null);
 				player.setCurrentRow(null);
 				return true;
@@ -233,6 +287,11 @@ public class Game {
 		return false;
 	}
 	
+	/**
+	 * Helper method for play method, moves the player to the cell in the passed direction
+	 * @param direction direction for player to move
+	 * @param player player to be moved
+	 */
 	private void movePlayer(Movement direction, Player player) {
 		int currentRowIndex = grid.getRows().indexOf(player.getCurrentRow());
 		int currentCellIndex = player.getCurrentRow().getCells().indexOf(player.getCurrentCell());
@@ -257,10 +316,17 @@ public class Game {
 	}
 	
 	@Override
+	/**
+	 * Formatted toString method that shows the game grid
+	 */
 	public String toString() {
 		return ("Game [grid=" + grid.toString() + "]");
 	}
 	
+	/**
+	 * Prints the game space in a grid, showing E for exit, S for space, and A for agent
+	 * @param player player to be displayed
+	 */
 	public void printGame(Player player) {
 		ArrayList<Row> rows = grid.getRows();
 		String formattedBoard = new String();
@@ -285,6 +351,11 @@ public class Game {
 		System.out.println(formattedBoard);
 	}
 	
+	/**
+	 * Returns true if the cell contains the exit component
+	 * @param cell
+	 * @return true if cell contains exit, false otherwise
+	 */
 	private boolean containsExit(Cell cell) {
 		if ((cell.getLeft() == CellComponents.EXIT)) {
 			return true;
@@ -293,6 +364,10 @@ public class Game {
 		}
 	}
 	
+	/**
+	 * Sets agent to the beginning space on the board (bottom right cell)
+	 * @param player player to set to beginning
+	 */
 	public void setAgentBeginning(Player player) {
 		player.setCurrentRow(grid.getRows().get(size-1));
 		player.setCurrentCell(grid.getRows().get(size-1).getCells().get(size-1));
