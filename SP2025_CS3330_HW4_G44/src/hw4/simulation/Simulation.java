@@ -23,7 +23,7 @@ public class Simulation {
 		for (int i = 1; i <= 5; i++) {
 			int size = random.nextInt(3, 8);
 			System.out.println("Grid " + i + ": Size = " + size);
-			game.setGrid(game.createRandomGrid(size));
+			game.createRandomGrid(size);
 			game.setAgentBeginning(player);
 			game.printGame(player);
 		}
