@@ -11,12 +11,20 @@ import hw4.maze.Row;
 import hw4.player.Movement;
 import hw4.player.Player;
 
+/**
+ * Simulation Class, contains methods relating to simulating gameplay
+ */
 public class Simulation {
 
+	/**
+	 * Main method, creates a new game object and player, and visualizes the functionality of the game
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		Game game = new Game(3);
 		Player player = new Player(null, null);
 		Random random = new Random();
+		//Creates 5 randomly generated grids and prints these grids
 		System.out.println("=======================");
 		System.out.println("Random Grid Generation");
 		System.out.println("=======================");
@@ -27,6 +35,7 @@ public class Simulation {
 			game.setAgentBeginning(player);
 			game.printGame(player);
 		}
+		//Simulates a round of gameplay, demonstrating what may happen when running into walls, going through apertures, and finding the exit
 		System.out.println("====================");
 		System.out.println("Gameplay Simulation");
 		System.out.println("====================");
@@ -45,6 +54,13 @@ public class Simulation {
 		playGame(game, player, Movement.LEFT);
 	}
 	
+	/**
+	 * Helper method for playing the in the simulation, takes the game, player, and direction and prints the respective output determined by the play method
+	 * @param game game being played
+	 * @param player player playing
+	 * @param direction direction to move
+	 * @return true if the exit was found, false otherwise
+	 */
 	private static boolean playGame(Game game, Player player, Movement direction) {
 		switch (direction) {
 		case DOWN:
@@ -86,6 +102,10 @@ public class Simulation {
 		return false;
 	}
 	
+	/**
+	 * Modified version of setupGame given in GameTest file, returns the pre-defined grid
+	 * @return created pre-defined grid
+	 */
 	private static Grid createGrid() {
 		Cell cell00 = new Cell(CellComponents.EXIT, CellComponents.APERTURE,
 				CellComponents.WALL, CellComponents.APERTURE);
