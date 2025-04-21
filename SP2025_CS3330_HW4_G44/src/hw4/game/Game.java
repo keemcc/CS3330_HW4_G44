@@ -16,10 +16,12 @@ public class Game {
 
 	public void setGrid(Grid grid) {
 		this.grid = grid;
+		this.size = grid.getRows().size();
 	}
 
 	public Game(Grid grid) {
 		this.grid = grid;
+		this.size = grid.getRows().size();
 	}
 
 	public Game(int size) {
@@ -192,7 +194,7 @@ public class Game {
 	}
 
 	public boolean play(Movement direction, Player player) {
-		if ((direction == null) || (player == null)) {
+		if ((direction == null) || (player == null) || (player.getCurrentCell() == null)) {
 			return false;
 		}
 		Cell currentCell = player.getCurrentCell();
@@ -208,6 +210,8 @@ public class Game {
 				movePlayer(Movement.LEFT, player);
 				return true;
 			} else if (currentCell.getLeft() == CellComponents.EXIT) {
+				player.setCurrentCell(null);
+				player.setCurrentRow(null);
 				return true;
 			}
 			break;
@@ -256,5 +260,43 @@ public class Game {
 	public String toString() {
 		return ("Game [grid=" + grid.toString() + "]");
 	}
+	
+	public void printGame(Player player) {
+		ArrayList<Row> rows = grid.getRows();
+		String formattedBoard = new String();
+		for (int currentRow = 0; currentRow < size; currentRow++) {
+			ArrayList<Cell> currentCells = rows.get(currentRow).getCells();
+			for (int currentColumn = 0; currentColumn < size; currentColumn++) {
+				Cell currentCell = currentCells.get(currentColumn);
+				if (containsExit(currentCell)) {
+					formattedBoard = formattedBoard.concat("E");
+				} else if (currentCell == player.getCurrentCell()) {
+					formattedBoard = formattedBoard.concat("A");
+				} else {
+					formattedBoard = formattedBoard.concat("S");
+				}
+				if (currentColumn == (size - 1)) {
+					formattedBoard = formattedBoard.concat("\n");
+				} else {
+					formattedBoard = formattedBoard.concat(" ");
+				}
+			}
+		}
+		System.out.println(formattedBoard);
+	}
+	
+	private boolean containsExit(Cell cell) {
+		if ((cell.getLeft() == CellComponents.EXIT)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public void setAgentBeginning(Player player) {
+		player.setCurrentRow(grid.getRows().get(size-1));
+		player.setCurrentCell(grid.getRows().get(size-1).getCells().get(size-1));
+	}
+
 
 }
