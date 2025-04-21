@@ -22,6 +22,22 @@ public class Player {
 	}
 
 	/**
+	 * Sets the player's row to be the passed row
+	 * @param currentRow
+	 */
+	public void setCurrentRow(Row currentRow) {
+		this.currentRow = currentRow;
+	}
+
+	/**
+	 * Sets the player's current cell to be the passed cell
+	 * @param currentCell
+	 */
+	public void setCurrentCell(Cell currentCell) {
+		this.currentCell = currentCell;
+	}
+
+	/**
 	 * Returns the player's current row
 	 * @return current row
 	 */
@@ -44,6 +60,5 @@ public class Player {
 	public String toString() {
 		return ("Player [currentCell=" + currentCell + ", currentRow=" + currentRow + "]");
 	}
-	
 
 }
